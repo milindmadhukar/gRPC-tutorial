@@ -35,7 +35,7 @@ func runGRPCServer(server *gapi.Server) {
 		panic(err)
 	}
 
-	log.Printf("gRPC to HTTP REST Gateway running on port %v\n", grpcListener.Addr().String())
+	log.Printf("gRPC Server running on port %v\n", grpcListener.Addr().String())
 	if err := grpcServer.Serve(grpcListener); err != nil {
 		panic(err)
 	}
@@ -63,12 +63,16 @@ func runGRPCtoRestGatewayServer(server *gapi.Server) {
 	mux := http.NewServeMux()
 	mux.Handle("/", grpcMux)
 
+  fs := http.FileServer(http.Dir("./docs/swagger/"))
+
+  mux.Handle("/swagger/", http.StripPrefix("/swagger/", fs))
+
 	httpListener, err := net.Listen("tcp", "localhost:9091")
 	if err != nil {
 		panic(err)
 	}
 
-	log.Printf("gRPC server running on port %v\n", httpListener.Addr().String())
+	log.Printf("gRPC to HTTP REST Gateway running on port %v\n", httpListener.Addr().String())
 	if err := http.Serve(httpListener, mux); err != nil {
 		panic(err)
 	}

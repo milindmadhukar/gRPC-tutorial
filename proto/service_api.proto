@@ -3,9 +3,22 @@ syntax = "proto3";
 package pb;
 
 import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
 import "rpc_create_user.proto";
 
 option go_package = "github.com/milindmadhukar/gRPC-tutorial/pb";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "GRPC Tutorial";
+    version: "1.0";
+    contact: {
+      name: "Milind";
+      url: "https://github.com/milindmadhukar";
+      email: "milindmadhukar@users.noreply.github.com";
+    };
+  };
+};
 
 service API {
   rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
