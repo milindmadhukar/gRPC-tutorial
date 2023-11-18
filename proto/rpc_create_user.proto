@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package pb;
+
+option go_package = "github.com/milindmadhukar/gRPC-tutorial/pb";
+
+import "user.proto";
+
+message CreateUserRequest {
+  string username = 1;
+  string name = 2;
+  string mail = 3;
+}
+
+message CreateUserResponse {
+  User user = 1;
+}
+
+

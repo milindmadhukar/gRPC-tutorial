@@ -1,0 +1,8 @@
+services:
+    evans:
+        ports:
+            - 9090:9090
+        volumes:
+            - /home/milind/Desktop/Code/Golang Projects/gRPC-tutorial/:/mount:ro
+        image: ghcr.io/ktr0731/evans:latest
+        command: --host localhost --port 9090 -r repl
