@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/milindmadhukar/gRPC-tutorial/docs"
 	"github.com/milindmadhukar/gRPC-tutorial/gapi"
 	"github.com/milindmadhukar/gRPC-tutorial/pb"
 	"google.golang.org/grpc"
@@ -42,13 +43,13 @@ func runGRPCServer(server *gapi.Server) {
 }
 
 func runGRPCtoRestGatewayServer(server *gapi.Server) {
-  jsonOpts := runtime.WithMarshalerOption(runtime.MIMEWildcard, &runtime.JSONPb{
+	jsonOpts := runtime.WithMarshalerOption(runtime.MIMEWildcard, &runtime.JSONPb{
 		MarshalOptions: protojson.MarshalOptions{
 			UseProtoNames: true,
 		},
 		UnmarshalOptions: protojson.UnmarshalOptions{
-      DiscardUnknown: true,
-    },
+			DiscardUnknown: true,
+		},
 	})
 
 	grpcMux := runtime.NewServeMux(jsonOpts)
@@ -63,9 +64,10 @@ func runGRPCtoRestGatewayServer(server *gapi.Server) {
 	mux := http.NewServeMux()
 	mux.Handle("/", grpcMux)
 
-  fs := http.FileServer(http.Dir("./docs/swagger/"))
-
-  mux.Handle("/swagger/", http.StripPrefix("/swagger/", fs))
+	mux.Handle(
+		"/swagger/",
+    docs.DocsHandler(),
+	)
 
 	httpListener, err := net.Listen("tcp", "localhost:9091")
 	if err != nil {
@@ -76,5 +78,4 @@ func runGRPCtoRestGatewayServer(server *gapi.Server) {
 	if err := http.Serve(httpListener, mux); err != nil {
 		panic(err)
 	}
-
 }
